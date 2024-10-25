@@ -2,7 +2,7 @@ import 'package:data_widget/data_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../../../AndroidStudioProjects/data_widget/test/data_test.dart';
+import 'data_test.dart';
 
 main() {
   testWidgets('MultiModel test', (tester) async {
