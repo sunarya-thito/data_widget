@@ -309,46 +309,6 @@ class DataNotifier<T> extends StatelessWidget implements MultiDataItem {
   Type get dataType => T;
 }
 
-class DataStream<T> extends StatelessWidget implements MultiDataItem {
-  final Stream<T> stream;
-  final Widget? child;
-
-  const DataStream(this.stream, {super.key, this.child});
-
-  const DataStream.inherit({
-    super.key,
-    required this.stream,
-    required this.child,
-  });
-
-  @override
-  Widget wrapWidget(Widget child) {
-    return DataStream<T>.inherit(
-      stream: stream,
-      child: child,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<T>(
-      stream: stream,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const SizedBox();
-        }
-        return Data<T>.inherit(
-          data: snapshot.data!,
-          child: child,
-        );
-      },
-    );
-  }
-
-  @override
-  Type get dataType => T;
-}
-
 /// A widget builder that receives the data from the ancestor Data widget.
 typedef DataWidgetBuilder<T> = Widget Function(
     BuildContext context, T data, Widget? child);
@@ -748,8 +708,12 @@ class _CaptureAllData extends StatelessWidget {
   }
 }
 
+mixin MultiModelItem {
+  Model<Object?> get normalized;
+}
+
 /// A mixin for all kinds of Model properties.
-mixin ModelProperty<T> {
+mixin ModelProperty<T> implements MultiModelItem {
   /// The data key of the model.
   Symbol get dataKey;
 
@@ -1139,7 +1103,7 @@ class ModelKey<T> {
 /// A widget that provides multiple models to its descendants.
 class MultiModel extends StatelessWidget {
   /// The list of models that will be provided to the descendants.
-  final List<ModelProperty> data;
+  final List<MultiModelItem> data;
 
   /// The child widget.
   final Widget child;

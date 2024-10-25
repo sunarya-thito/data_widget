@@ -3,45 +3,19 @@ import 'package:flutter/foundation.dart';
 import '../data_widget.dart';
 
 /// A notifier class that allows mutable updates and notifies listeners of changes.
-class MutableNotifier<T> implements ValueListenable<T> {
-  final EventNotifier _notifier = EventNotifier();
-
-  @override
-  final T value;
-
+class MutableNotifier<T> extends ValueNotifier<T> {
   /// Constructs a [MutableNotifier] with an initial value.
-  MutableNotifier(this.value);
+  MutableNotifier(super.value);
 
   /// Updates the value using the provided [updater] function.
   /// If the [updater] returns `null` or `true`, listeners are notified.
-  void setValue(bool? Function(T) updater) {
+  void mutate(Function(T value) updater) {
     var result = updater(value);
-    if (result == null || result) {
-      _notifier.notify();
+    if (result is T && result != value) {
+      value = result;
+    } else if (result == null || result == true) {
+      notifyListeners();
     }
-  }
-
-  @override
-  void addListener(VoidCallback listener) {
-    _notifier.addListener(listener);
-  }
-
-  @override
-  void removeListener(VoidCallback listener) {
-    _notifier.removeListener(listener);
-  }
-}
-
-/// A notifier class that extends [ChangeNotifier] to provide custom notification logic.
-class EventNotifier extends ChangeNotifier {
-  /// Notifies all registered listeners.
-  void notify() {
-    notifyListeners();
-  }
-
-  /// Creates a [ValueListenable] that hooks into the current notifier and provides a value.
-  ValueListenable<T> hookWithValue<T>(T Function() getValue) {
-    return _ValueHookListenable(getValue, this);
   }
 }
 
@@ -68,28 +42,6 @@ class ValueNotifierUnmodifiableView<T> extends ValueListenable<T> {
 
   @override
   T get value => _notifier.value;
-
-  @override
-  void addListener(VoidCallback listener) {
-    _notifier.addListener(listener);
-  }
-
-  @override
-  void removeListener(VoidCallback listener) {
-    _notifier.removeListener(listener);
-  }
-}
-
-/// A [ValueListenable] that hooks into an [EventNotifier] and provides a value.
-class _ValueHookListenable<T> extends ValueListenable<T> {
-  final T Function() _getValue;
-  final EventNotifier _notifier;
-
-  /// Constructs a [_ValueHookListenable] with the given value getter and notifier.
-  _ValueHookListenable(this._getValue, this._notifier);
-
-  @override
-  T get value => _getValue();
 
   @override
   void addListener(VoidCallback listener) {

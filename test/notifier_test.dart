@@ -9,7 +9,8 @@ void main() {
     list.addListener(() {
       listenerCalled = true;
     });
-    list.setValue((value) {
+    list.mutate((value) => value.add(12));
+    list.mutate((value) {
       value.add(4);
       return true;
     });
@@ -22,21 +23,11 @@ void main() {
     list.addListener(() {
       listenerCalled = true;
     });
-    list.setValue((value) {
+    list.mutate((value) {
       value.add(4);
       return false;
     });
     expect(listenerCalled, false);
-  });
-
-  test('EventNotifier test', () {
-    EventNotifier notifier = EventNotifier();
-    bool listenerCalled = false;
-    notifier.addListener(() {
-      listenerCalled = true;
-    });
-    notifier.notify();
-    expect(listenerCalled, true);
   });
 
   test('ValueNotifierExtension test', () {
@@ -48,18 +39,6 @@ void main() {
       listenerCalled = true;
     });
     valueNotifier.value = 2;
-    expect(listenerCalled, true);
-  });
-
-  test('EventNotifier hookWithValue test', () {
-    EventNotifier notifier = EventNotifier();
-    ValueListenable<int> valueListenable = notifier.hookWithValue(() => 1);
-    expect(valueListenable.value, 1);
-    bool listenerCalled = false;
-    valueListenable.addListener(() {
-      listenerCalled = true;
-    });
-    notifier.notify();
     expect(listenerCalled, true);
   });
 }
