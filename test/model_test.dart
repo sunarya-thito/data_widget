@@ -187,7 +187,7 @@ class _RootModelWidgetState extends State<RootModelWidget> {
     return ShadcnTester(
       child: MultiModel(
         data: [
-          Model<int>(
+          Model(
             #counter,
             counter,
             onChanged: (value) {
@@ -196,7 +196,7 @@ class _RootModelWidgetState extends State<RootModelWidget> {
               });
             },
           ),
-          Model<bool>(
+          Model(
             #flag,
             flag,
             onChanged: (value) {
@@ -251,7 +251,7 @@ class _RootModelSeparatedWidgetState extends State<RootModelSeparatedWidget> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Model<int>.inherit(
+          Model.inherit(
             #counter,
             counter,
             onChanged: (value) {
@@ -259,7 +259,7 @@ class _RootModelSeparatedWidgetState extends State<RootModelSeparatedWidget> {
                 counter = value;
               });
             },
-            child: Model<bool>.inherit(
+            child: Model.inherit(
               #flag,
               flag,
               onChanged: (value) {
@@ -398,11 +398,11 @@ class _RootModelReadOnlyWidgetState extends State<RootModelReadOnlyWidget> {
     return ShadcnTester(
       child: MultiModel(
         data: [
-          Model<int>(
+          Model(
             #counter,
             counter,
           ),
-          Model<bool>(
+          Model(
             #flag,
             flag,
           ),
@@ -453,10 +453,10 @@ class _RootModelReadOnlySeparatedWidgetState
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Model<int>.inherit(
+          Model.inherit(
             #counter,
             counter,
-            child: Model<bool>.inherit(
+            child: Model.inherit(
               #flag,
               flag,
               child: widget.child,
