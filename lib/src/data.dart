@@ -496,6 +496,7 @@ class Data<T> extends StatelessWidget implements MultiDataItem {
   /// * [T] The type of the data.
   /// * [context] The build context.
   static T? maybeFind<T>(BuildContext context) {
+    assert(context.mounted, 'The context must be mounted');
     final widget = context.findAncestorWidgetOfExactType<Data<T>>();
     if (widget == null) {
       return null;
@@ -508,6 +509,7 @@ class Data<T> extends StatelessWidget implements MultiDataItem {
   /// * [T] The type of the data.
   /// * [context] The build context.
   static T? maybeFindMessenger<T>(BuildContext context) {
+    assert(context.mounted, 'The context must be mounted');
     InheritedDataHolderWidget? holder =
         context.findAncestorWidgetOfExactType<InheritedDataHolder<T>>();
     holder ??= context.findAncestorWidgetOfExactType<InheritedRootDataHolder>();
@@ -540,6 +542,7 @@ class Data<T> extends StatelessWidget implements MultiDataItem {
   /// * [T] The type of the data.
   /// * [context] The build context.
   static T? maybeFindRoot<T>(BuildContext context) {
+    assert(context.mounted, 'The context must be mounted');
     T? found;
     context.visitAncestorElements((element) {
       if (element.widget is Data<T>) {
@@ -569,6 +572,7 @@ class Data<T> extends StatelessWidget implements MultiDataItem {
   /// * [T] The type of the data.
   /// * [context] The build context.
   static T? maybeOf<T>(BuildContext context) {
+    assert(context.mounted, 'The context must be mounted');
     final widget =
         context.dependOnInheritedWidgetOfExactType<_InheritedData<T>>();
     if (widget == null) {
@@ -840,8 +844,8 @@ class Model<T> extends StatelessWidget with ModelProperty<T> {
   /// * [context] The build context.
   /// * [key] The data key.
   /// * [data] The new data.
-  static void maybeChange<T>(BuildContext context, Symbol key, T data) {
-    MultiModel.maybeChange(context, key, data);
+  static bool maybeChange<T>(BuildContext context, Symbol key, T data) {
+    return MultiModel.maybeChange(context, key, data);
   }
 
   /// Find and listen to property changes of the data with the given type from the context.
@@ -1155,17 +1159,18 @@ class MultiModel extends StatelessWidget {
     assert(false, 'No Model<$T>($key) found in context');
   }
 
-  static void maybeChange<T>(BuildContext context, Symbol key, T data) {
+  static bool maybeChange<T>(BuildContext context, Symbol key, T data) {
     final widget = context.findAncestorWidgetOfExactType<_InheritedModel>();
     if (widget == null) {
-      return;
+      return false;
     }
     for (final model in widget.data) {
       if (model.dataKey == key) {
         model.value = data;
-        return;
+        return true;
       }
     }
+    return false;
   }
 
   static ModelProperty<T>? maybeFindProperty<T>(
