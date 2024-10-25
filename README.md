@@ -1,39 +1,312 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
-
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+# data_widget
+`data_widget` is a Flutter package that provides a simple wrapper for InheritedWidget, InheritedModel, InheritedNotifier, ValueNotifier, and ChangeNotifier.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+### Data
+A widget that holds a single data and allows its descendants to access the data and listen to changes.
 
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
+#### Providing the data
 ```dart
-const like = 'sample';
+Data.inherit(
+  data: 'Hello, World!',
+  child: const MyWidget(),
+)
 ```
 
-## Additional information
+#### Getting the data
+There are multiple ways to get the data:
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+##### Find and listen
+This method will find the nearest `Data<T>` widget (in this case `Data<String>`).
+Calling this method will register a listener that will be invoked when the data changes.
+In other words, the widget will rebuild when the data changes. This will throw
+an assertion error if the data is not found.
+```dart
+String data = Data.of<String>(context);
+```
+
+##### Optionally find and listen
+This method is similar to `Data.of<T>(BuildContext context)`, but will not throw an assertion error if the data is not found.
+```dart
+String? data = Data.maybeOf<String>(context);
+```
+
+##### Find
+This method will find the nearest `Data<T>` widget (in this case `Data<String>`).
+This will throw an assertion error if the data is not found.
+This method does not register any listener so the widget will not rebuild when the data changes.
+This is useful when you only need to read the data once (i.e. in `onPressed` callback, `onTap` callback, etc.).
+```dart
+String data = Data.find<String>(context);
+```
+
+##### Optionally find
+This method is similar to `Data.find<T>(BuildContext context)`, but will not throw an assertion error if the data is not found.
+```dart
+String? data = Data.maybeFind<String>(context);
+```
+
+#### Blocking the data
+You can stop the data from being passed down to its descendants by wrapping the widget with `Data.boundary`
+```dart
+Data.boundary<MyService>(
+  child: const MyWidget(),
+)
+```
+
+### MultiData
+A widget that holds multiple data and allows its descendants to access the data and listen to changes without having to nest multiple `Data` widgets.
+
+Usually, when you need to pass multiple data to its descendants, you will have to nest multiple `Data` widgets.
+```dart
+Data.inherit(
+  data: 'Hello, World!',
+  child: Data.inherit(
+    data: 42,
+    child: Data.boundary<MyService>(
+      child: const MyWidget(),
+    ),
+  ),
+)
+```
+
+With `MultiData`, you can pass multiple data without having to nest multiple `Data` widgets.
+```dart
+MultiData(
+  data: [
+    Data<String>('Hello, World!'),
+    Data(42), // not providing type is optional, it will be inferred from the data
+    Data.boundary<MyService>(), // but a must for boundary
+  ],
+```
+
+Getting the data is similar to `Data` widget.
+
+| Note                                                                                                  |
+|:----------------------------------------------------------------------------------------------------------|
+| Providing type in the type param is optional but encouraged to avoid runtime errors due to type mismatch. |
+
+| Warning                                                                                                |
+|:--------------------------------------------------------------------------------------------------------|
+| The order of the data must be the same as the order of the data provided.                               |
+
+### Model
+A widget that holds a single model and allows its descendants to access or change the value of the model.
+Similar to `Data` but uses symbol as the key to identify the model. Mostly useful when getting same type data
+within the same widget tree.
+```dart
+// Using Data
+Data.inherit(
+  data: 'Hello, World!',
+  child: Data.inherit(
+    data: 'Another!',
+    child: const MyWidget(), // The widget can only access 'Another!' data 
+  ),
+)
+// Using Model
+MultiModel(
+  data: [
+    Model(#myString, 'Hello, World!'),
+    Model(#myString2, 'Another!'),
+  ],
+  child: const MyWidget(), // The widget can access both 'Hello, World!' and 'Another!' data
+)
+```
+
+#### Providing a read-only model
+```dart
+Model.inherit(
+  #myString,
+  'Hello World',
+  child: const MyWidget(),
+)
+```
+
+#### Providing a model
+```dart
+String myString = 'Hello World';
+
+Model.inherit(
+  #myString,
+  myString,
+  child: const MyWidget(),
+  onChanged: (value) {
+    myString = value;
+  },
+)
+```
+
+#### Getting the model
+There are multiple ways to get the model, most of them are similar to `Data` widget.
+```dart
+// Find and listen
+String myString = Model.of<String>(context, #myString);
+// Optionally find and listen
+String? myString = Model.maybeOf<String>(context, #myString);
+// Find
+String myString = Model.find<String>(context, #myString);
+// Optionally find
+String? myString = Model.maybeFind<String>(context, #myString);
+```
+
+#### Blocking the model
+You can stop the model from being passed down to its descendants by wrapping the widget with `ModelBoundary`
+```dart
+/// Single boundary
+ModelBoundary<MyService>(
+  #myService,
+  child: const MyWidget(), // cannot access #myService
+)
+/// Multiple boundary
+MultiModel(
+  data: [
+    ModelBoundary<MyService>(#myService),
+    ModelBoundary<MyService>(#myService2),
+  ],
+  child: const MyWidget(), // cannot access #myService and #myService2
+)
+```
+
+### MultiModel
+A widget that holds multiple models and allows its descendants to access or change the value of the model.
+Similar to `MultiData` but uses symbol as the key to identify the model. Mostly useful when getting same type data
+within the same widget tree.
+```dart
+MultiModel(
+  data: [
+    Model(#myString, 'Hello, World!'),
+    Model(#myString2, 'Another!'),
+    ModelBoundary<MyService>(#myService),
+  ],
+  child: const MyWidget(),
+)
+```
+
+Getting the model is similar to `Model` widget.
+
+| Note                                                                                                  |
+|:----------------------------------------------------------------------------------------------------------|
+| Providing type in the type param is optional but encouraged to avoid runtime errors due to type mismatch. |
+
+| Warning                                                                                                |
+|:--------------------------------------------------------------------------------------------------------|
+| The order of the data must be the same as the order of the data provided.                               |
+
+### MutableNotifier
+When using `List` (or any mutable object) as the value for `ValueNotifier`, it will not notify the listeners when the list is mutated,
+because the reference to the list is not changed. `MutableNotifier` solves this problem by providing a method
+to mutate the list and notify the listeners.
+```dart
+MutableNotifier<List<int>> list = MutableNotifier([1, 2, 3]);
+list.mutate((value) {
+  value.add(4);
+});
+```
+
+You can also decide whether to notify the listeners or not.
+```dart
+MutableNotifier<Set<int>> set = MutableNotifier({1, 2, 3});
+set.mutate((value) {
+  if (!value.contains(4)) {
+    value.add(4);
+    return true; // notify the listeners
+  }
+  return false; // do not notify the listeners
+});
+```
+
+### ValueNotifierUnmodifiableView
+A wrapper for `ValueNotifier` that provides an unmodifiable view of the value.
+```dart
+ValueNotifier<String> valueNotifier = ValueNotifier('Hello, World!');
+// Sure you can do this so that the value cannot be changed
+ValueListenable<String> castedNotifier = valueNotifier;
+// But you can still change the value by casting it back to ValueNotifier
+(castedNotifier as ValueNotifier<String>).value = 'Another!';
+// This can cause unexpected behavior
+
+// Using ValueNotifierUnmodifiableView
+ValueListenable<String> valueListenable = ValueNotifierUnmodifiableView(valueNotifier);
+// This prevents the value from being changed outside of your control
+(valueListenable as ValueNotifier<String>).value = 'Another!';
+// as valueListenable is no longer a ValueNotifier, this will throw an error
+```
+
+You can also use the `ValueNotifier` extension method to convert the `ValueNotifier` to `ValueNotifierUnmodifiableView`.
+```dart
+ValueNotifier<String> _valueNotifier = ValueNotifier('Hello, World!');
+
+ValueListenable<String> get valueListenable => _valueNotifier.readOnly(); 
+```
+
+### ValueChangeNotifier
+Similar to `ValueNotifier`, but listeners can be notified with the old value and the new value.
+```dart
+ValueChangeNotifier<int> valueChangeNotifier = ValueChangeNotifier(42);
+valueChangeNotifier.addListener((newValue, oldValue) {
+  print('Old value: $oldValue');
+  print('New value: $newValue');
+});
+valueChangeNotifier.value = 43;
+```
+
+### ListNotifier
+A list that can notify the listeners when the list is mutated.
+```dart
+ListNotifier<int> listNotifier = ListNotifier([1, 2, 3]);
+listNotifier.addListener((details) {
+  print('Added: ${details.added}');
+  print('Removed: ${details.removed}');
+  print('Index: ${details.index}');  
+});
+listNotifier.add(4);
+```
+
+### SetNotifier
+A set that can notify the listeners when the set is mutated.
+```dart
+SetNotifier<int> setNotifier = SetNotifier({1, 2, 3});
+setNotifier.addListener((details) {
+  print('Added: ${details.added}');
+  print('Removed: ${details.removed}');
+});
+setNotifier.add(4);
+```
+
+### MapNotifier
+A map that can notify the listeners when the map is mutated.
+```dart
+MapNotifier<int, String> mapNotifier = MapNotifier({1: 'One', 2: 'Two', 3: 'Three'});
+mapNotifier.addListener((details) {
+  print('Added: ${details.added}'); // added entries
+  print('Removed: ${details.removed}'); // removed entries
+});
+mapNotifier[4] = 'Four';
+```
+
+## Getting started
+### 1. Install the package
+In your terminal:
+```bash
+flutter pub add data_widget
+```
+or you can add it manually in your `pubspec.yaml`:
+```yaml
+dependencies:
+  data_widget: {latest_version}
+```
+
+### 2. Import the package
+```dart
+import 'package:data_widget/data_widget.dart';
+```
+
+### Using Experimental Version
+If you want to use the experimental version, you can add the following to your `pubspec.yaml`:
+```yaml
+dependencies:
+  data_widget:
+    git:
+      url: "https://github.com/sunarya-thito/data_widget.git"
+```
