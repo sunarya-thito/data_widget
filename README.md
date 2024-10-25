@@ -206,7 +206,7 @@ list.mutate((value) {
 
 You can also decide whether to notify the listeners or not.
 ```dart
-MutableNotifier<Set<int>> set = MutableNotifier({1, 2, 3});
+MutableNotifier<List<int>> set = MutableNotifier([1, 2, 3]);
 set.mutate((value) {
   if (!value.contains(4)) {
     value.add(4);
