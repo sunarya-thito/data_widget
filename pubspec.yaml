@@ -1,7 +1,7 @@
 name: data_widget
 description: "A data related helper widget and tools"
 version: 0.0.1
-homepage:
+homepage: "https://github.com/sunarya-thito/data_widget"
 
 environment:
   sdk: ^3.5.0
