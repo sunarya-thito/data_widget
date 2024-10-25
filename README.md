@@ -244,7 +244,7 @@ ValueListenable<String> get valueListenable => _valueNotifier.readOnly();
 Similar to `ValueNotifier`, but listeners can be notified with the old value and the new value.
 ```dart
 ValueChangeNotifier<int> valueChangeNotifier = ValueChangeNotifier(42);
-valueChangeNotifier.addListener((newValue, oldValue) {
+valueChangeNotifier.addChangeListener((newValue, oldValue) {
   print('Old value: $oldValue');
   print('New value: $newValue');
 });
@@ -255,7 +255,7 @@ valueChangeNotifier.value = 43;
 A list that can notify the listeners when the list is mutated.
 ```dart
 ListNotifier<int> listNotifier = ListNotifier([1, 2, 3]);
-listNotifier.addListener((details) {
+listNotifier.addChangeListener((details) {
   print('Added: ${details.added}');
   print('Removed: ${details.removed}');
   print('Index: ${details.index}');  
@@ -267,7 +267,7 @@ listNotifier.add(4);
 A set that can notify the listeners when the set is mutated.
 ```dart
 SetNotifier<int> setNotifier = SetNotifier({1, 2, 3});
-setNotifier.addListener((details) {
+setNotifier.addChangeListener((details) {
   print('Added: ${details.added}');
   print('Removed: ${details.removed}');
 });
@@ -278,7 +278,7 @@ setNotifier.add(4);
 A map that can notify the listeners when the map is mutated.
 ```dart
 MapNotifier<int, String> mapNotifier = MapNotifier({1: 'One', 2: 'Two', 3: 'Three'});
-mapNotifier.addListener((details) {
+mapNotifier.addChangeListener((details) {
   print('Added: ${details.added}'); // added entries
   print('Removed: ${details.removed}'); // removed entries
 });
