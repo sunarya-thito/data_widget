@@ -184,7 +184,7 @@ class _RootModelWidgetState extends State<RootModelWidget> {
   bool flag = false;
   @override
   Widget build(BuildContext context) {
-    return ShadcnTester(
+    return Tester(
       child: MultiModel(
         data: [
           Model(
@@ -247,7 +247,7 @@ class _RootModelSeparatedWidgetState extends State<RootModelSeparatedWidget> {
   bool flag = false;
   @override
   Widget build(BuildContext context) {
-    return ShadcnTester(
+    return Tester(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -306,7 +306,7 @@ class _RootModelNotifierWidgetState extends State<RootModelNotifierWidget> {
   final flag = ValueNotifier<bool>(false);
   @override
   Widget build(BuildContext context) {
-    return ShadcnTester(
+    return Tester(
       child: MultiModel(
         data: [
           ModelNotifier<int>(#counter, counter),
@@ -350,7 +350,7 @@ class _RootModelNotifierSeparatedWidgetState
   final flag = ValueNotifier<bool>(false);
   @override
   Widget build(BuildContext context) {
-    return ShadcnTester(
+    return Tester(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -395,7 +395,7 @@ class _RootModelReadOnlyWidgetState extends State<RootModelReadOnlyWidget> {
   bool flag = false;
   @override
   Widget build(BuildContext context) {
-    return ShadcnTester(
+    return Tester(
       child: MultiModel(
         data: [
           Model(
@@ -449,7 +449,7 @@ class _RootModelReadOnlySeparatedWidgetState
   bool flag = false;
   @override
   Widget build(BuildContext context) {
-    return ShadcnTester(
+    return Tester(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

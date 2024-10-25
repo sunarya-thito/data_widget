@@ -68,10 +68,10 @@ main() {
   });
 }
 
-class ShadcnTester extends StatelessWidget {
+class Tester extends StatelessWidget {
   final Widget child;
 
-  const ShadcnTester({super.key, required this.child});
+  const Tester({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +110,7 @@ class RootWidgetState extends State<RootWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return ShadcnTester(
+    return Tester(
       child: Data.inherit(
         data: _counter,
         child: Data.inherit(

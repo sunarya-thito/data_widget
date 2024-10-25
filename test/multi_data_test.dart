@@ -77,7 +77,7 @@ class MultiDataRootWidgetState extends State<MultiDataRootWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return ShadcnTester(
+    return Tester(
       child: MultiData(
           data: [
             Data(_counter),
