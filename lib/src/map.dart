@@ -23,7 +23,11 @@ typedef MapChangeListener<K, V> = void Function(MapChangeDetails<K, V> details);
 abstract class MapListenable<K, V> extends ValueListenable<Map<K, V>> {
   @override
   Map<K, V> get value;
+
+  /// Adds a [listener] to be notified of changes.
   void addChangeListener(MapChangeListener<K, V> listener);
+
+  /// Removes a [listener] from being notified of changes.
   void removeChangeListener(MapChangeListener<K, V> listener);
 }
 

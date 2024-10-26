@@ -670,6 +670,18 @@ class _InheritedData<T> extends InheritedWidget {
   });
 
   @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<T>('data', data));
+  }
+
+  @override
+  String toStringShort() {
+    final String type = objectRuntimeType(this, 'Data');
+    return key == null ? type : '$type-$key';
+  }
+
+  @override
   bool updateShouldNotify(covariant _InheritedData<T> oldWidget) {
     if (data is DistinctData && oldWidget.data is DistinctData) {
       return (data as DistinctData)
@@ -731,7 +743,9 @@ class _CaptureAllData extends StatelessWidget {
   }
 }
 
+/// A mixin for all kinds of Data properties.
 mixin MultiModelItem {
+  /// The normalized model of the model.
   Model<Object?> get normalized;
 }
 
@@ -1286,6 +1300,15 @@ class _InheritedModel extends InheritedModel<ModelKey> {
   final Iterable<Model> data;
 
   const _InheritedModel(this.data, {required super.child});
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    for (final model in data) {
+      properties
+          .add(DiagnosticsProperty(model.dataKey.toString(), model.value));
+    }
+  }
 
   @override
   bool updateShouldNotify(covariant _InheritedModel oldWidget) {

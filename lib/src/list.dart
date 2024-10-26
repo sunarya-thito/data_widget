@@ -12,7 +12,11 @@ typedef ListChangeListener<T> = void Function(ListChangeDetails<T> details);
 abstract class ListListenable<T> extends ValueListenable<List<T>> {
   @override
   List<T> get value;
+
+  /// Adds a [listener] to be notified of changes.
   void addChangeListener(ListChangeListener<T> listener);
+
+  /// Removes a [listener] from being notified of changes.
   void removeChangeListener(ListChangeListener<T> listener);
 }
 
