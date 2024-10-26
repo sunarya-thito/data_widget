@@ -26,22 +26,28 @@ extension ValueNotifierExtension<T> on ValueNotifier<T> {
     return ValueNotifierUnmodifiableView(this);
   }
 
+  /// Maps the value of the [ValueNotifier] to a new value.
   ValueListenable<R> map<R>(R Function(T value) mapper) {
     return MappedValueNotifier(this, mapper);
   }
 }
 
+/// Extension on [ValueListenable] to provide a read-only view and mapping.
 extension ValueListenableExtension<T> on ValueListenable<T> {
+  /// Returns a read-only view of the [ValueListenable].
   ValueListenable<R> map<R>(R Function(T value) mapper) {
     return MappedValueNotifier(this, mapper);
   }
 }
 
+/// Extension on [ValueChangeNotifier] to provide a read-only view and mapping.
 extension ValueChangeNotifierExtension<T> on ValueChangeNotifier<T> {
+  /// Returns a read-only view of the [ValueChangeNotifier].
   ValueListenable<T> readOnly() {
     return ValueNotifierUnmodifiableView(this);
   }
 
+  /// Maps the value of the [ValueChangeNotifier] to a new value.
   ValueListenable<R> map<R>(R Function(T value) mapper) {
     return MappedValueNotifier(this, mapper);
   }
@@ -68,10 +74,12 @@ class ValueNotifierUnmodifiableView<T> extends ValueListenable<T> {
   }
 }
 
+/// A [ValueListenable] that maps the value of another [ValueListenable].
 class MappedValueNotifier<T, R> extends ValueListenable<R> {
   final ValueListenable<T> _notifier;
   final R Function(T value) _mapper;
 
+  /// Constructs a [MappedValueNotifier] with the given [ValueListenable] and mapper function.
   MappedValueNotifier(this._notifier, this._mapper);
 
   @override

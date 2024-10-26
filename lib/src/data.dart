@@ -1096,36 +1096,45 @@ class ModelListenable<T> extends StatelessWidget
 class ModelKey<T> {
   final Symbol key;
 
+  /// Creates a ModelKey.
   const ModelKey(this.key);
 
+  /// {@macro Model.maybeOf}
   T? maybeOf(BuildContext context) {
     return MultiModel.maybeOf<T>(context, key);
   }
 
+  /// {@macro Model.of}
   T of(BuildContext context) {
     return MultiModel.of<T>(context, key);
   }
 
+  /// {@macro Model.maybeFind}
   T? maybeFind(BuildContext context) {
     return MultiModel.maybeFind<T>(context, key);
   }
 
+  /// {@macro Model.find}
   T find(BuildContext context) {
     return MultiModel.find<T>(context, key);
   }
 
+  /// {@macro Model.maybeChange}
   void maybeChange(BuildContext context, T data) {
     MultiModel.maybeChange(context, key, data);
   }
 
+  /// {@macro Model.change}
   void change(BuildContext context, T data) {
     MultiModel.change(context, key, data);
   }
 
+  /// {@macro Model.maybeFindProperty}
   ModelProperty<T>? maybeFindProperty(BuildContext context) {
     return MultiModel.maybeFindProperty<T>(context, key);
   }
 
+  /// {@macro Model.find}
   ModelProperty<T> findProperty(BuildContext context) {
     return MultiModel.findProperty<T>(context, key);
   }
@@ -1173,22 +1182,27 @@ class MultiModel extends StatelessWidget {
     );
   }
 
+  /// {@macro Model.maybeOf}
   static T? maybeOf<T>(BuildContext context, Symbol key) {
     return maybeOfProperty<T>(context, key)?.value;
   }
 
+  /// {@macro Model.of}
   static T of<T>(BuildContext context, Symbol key) {
     return ofProperty<T>(context, key).value;
   }
 
+  /// {@macro Model.maybeFind}
   static T? maybeFind<T>(BuildContext context, Symbol key) {
     return maybeOfProperty<T>(context, key)?.value;
   }
 
+  /// {@macro Model.find}
   static T find<T>(BuildContext context, Symbol key) {
     return findProperty<T>(context, key).value;
   }
 
+  /// {@macro Model.change}
   static void change<T>(BuildContext context, Symbol key, T data) {
     final widget = context.findAncestorWidgetOfExactType<_InheritedModel>();
     assert(widget != null, 'No Model<$T>($key) found in context');
@@ -1201,6 +1215,7 @@ class MultiModel extends StatelessWidget {
     assert(false, 'No Model<$T>($key) found in context');
   }
 
+  /// {@macro Model.maybeFindProperty}
   static bool maybeChange<T>(BuildContext context, Symbol key, T data) {
     final widget = context.findAncestorWidgetOfExactType<_InheritedModel>();
     if (widget == null) {
@@ -1215,6 +1230,7 @@ class MultiModel extends StatelessWidget {
     return false;
   }
 
+  /// {@macro Model.ofProperty}
   static ModelProperty<T>? maybeFindProperty<T>(
       BuildContext context, Symbol key) {
     final widget = context.findAncestorWidgetOfExactType<_InheritedModel>();
@@ -1232,12 +1248,14 @@ class MultiModel extends StatelessWidget {
     return null;
   }
 
+  /// {@macro Model.findProperty}
   static ModelProperty<T> findProperty<T>(BuildContext context, Symbol key) {
     final model = maybeFindProperty<T>(context, key);
     assert(model != null, 'No Model<$T>($key) found in context');
     return model!;
   }
 
+  /// {@macro Model.maybeOfProperty}
   static ModelProperty<T>? maybeOfProperty<T>(
       BuildContext context, Symbol key) {
     var model = InheritedModel.inheritFrom<_InheritedModel>(context,
@@ -1256,6 +1274,7 @@ class MultiModel extends StatelessWidget {
     return null;
   }
 
+  /// {@macro Model.ofProperty}
   static ModelProperty<T> ofProperty<T>(BuildContext context, Symbol key) {
     final model = maybeOfProperty<T>(context, key);
     assert(model != null, 'No Model<$T>($key) found in context');
@@ -1346,14 +1365,22 @@ class _InheritedModel extends InheritedModel<ModelKey> {
   }
 }
 
+/// A callback that takes the model and returns a widget.
 typedef ModelWidgetBuilder<T> = Widget Function(
     BuildContext context, ModelProperty<T> model, Widget? child);
 
+/// A widget that uses the model to build a widget.
 class ModelBuilder<T> extends StatelessWidget {
+  /// The data key of the model.
   final Symbol dataKey;
+
+  /// The builder callback that takes the model and returns a widget.
   final ModelWidgetBuilder<T> builder;
+
+  /// The child widget.
   final Widget? child;
 
+  /// Creates a ModelBuilder.
   const ModelBuilder(
     this.dataKey, {
     super.key,
@@ -1369,13 +1396,18 @@ class ModelBuilder<T> extends StatelessWidget {
   }
 }
 
+/// An interface to provide a way to notify listeners.
 abstract class ChangeListener {
+  /// Dispatches the event to the listener.
   void dispatch(Object? event);
 }
 
+/// A callback that takes no arguments and returns no data.
 class VoidChangeListener extends ChangeListener {
+  /// The listener callback.
   final VoidCallback listener;
 
+  /// Creates a VoidChangeListener.
   VoidChangeListener(this.listener);
 
   @override
@@ -1393,6 +1425,7 @@ class VoidChangeListener extends ChangeListener {
   int get hashCode => listener.hashCode;
 }
 
+/// A mixin that provides a way to notify listeners.
 mixin ChangesNotifierHelperMixin {
   int _count = 0;
   static final List<ChangeListener?> _emptyListeners =
@@ -1405,6 +1438,7 @@ mixin ChangesNotifierHelperMixin {
 
   bool _creationDispatched = false;
 
+  /// A debug assertion to check if the object is disposed.
   static bool debugAssertNotDisposed(ChangesNotifierHelperMixin notifier) {
     assert(() {
       if (notifier._debugDisposed) {
@@ -1419,11 +1453,17 @@ mixin ChangesNotifierHelperMixin {
     return true;
   }
 
+  /// Whether the object has listeners.
   @protected
   bool get hasListeners {
     return _count > 0;
   }
 
+  /// Report that the object has been created.
+  /// This method is called by the object itself to report that it has been
+  /// created. This is used to track memory allocations.
+  /// This method is only called if kFlutterMemoryAllocationsEnabled is true.
+  /// - [object] The object that has been created.
   @protected
   static void maybeDispatchObjectCreation(ChangesNotifierHelperMixin object) {
     // Tree shaker does not include this method and the class MemoryAllocations
@@ -1438,6 +1478,8 @@ mixin ChangesNotifierHelperMixin {
     }
   }
 
+  /// Add a listener to the list of listeners.
+  /// - [listener] The listener to add.
   @protected
   void defaultAddListener(ChangeListener listener) {
     assert(debugAssertNotDisposed(this));
@@ -1494,6 +1536,8 @@ mixin ChangesNotifierHelperMixin {
     }
   }
 
+  /// Remove a listener from the list of listeners.
+  /// - [listener] The listener to remove.
   @protected
   void defaultRemoveListener(ChangeListener listener) {
     // This method is allowed to be called on disposed instances for usability
@@ -1521,6 +1565,8 @@ mixin ChangesNotifierHelperMixin {
     }
   }
 
+  /// Disposes the object making it unusable for further operations and
+  /// releasing the resources.
   @mustCallSuper
   void dispose() {
     assert(debugAssertNotDisposed(this));
@@ -1541,6 +1587,8 @@ mixin ChangesNotifierHelperMixin {
     _count = 0;
   }
 
+  /// Notify all the listeners.
+  /// - [event] The event to send to the listeners.
   @protected
   @visibleForTesting
   @pragma('vm:notify-debugger-on-exception')

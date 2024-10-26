@@ -4,15 +4,22 @@ import 'package:flutter/foundation.dart';
 
 import '../data_widget.dart';
 
+/// A map change details containing the added and removed entries.
 class MapChangeDetails<K, V> {
+  /// The added entries.
   final Iterable<MapEntry<K, V>> added;
+
+  /// The removed entries.
   final Iterable<MapEntry<K, V>> removed;
 
+  /// Creates a map change details.
   const MapChangeDetails(this.added, this.removed);
 }
 
+/// A callback that receives a [MapChangeDetails] object.
 typedef MapChangeListener<K, V> = void Function(MapChangeDetails<K, V> details);
 
+/// A map that can be listened to for changes.
 abstract class MapListenable<K, V> extends ValueListenable<Map<K, V>> {
   @override
   Map<K, V> get value;
@@ -40,17 +47,22 @@ class _MapChangeListener<K, V> extends ChangeListener {
   int get hashCode => listener.hashCode;
 }
 
+/// A map that can be listened to for changes and notifies listeners when the map changes.
 class MapNotifier<K, V> extends MapListenable<K, V>
     with ChangesNotifierHelperMixin
     implements Map<K, V> {
   final Map<K, V> _map;
 
+  /// Creates a map notifier.
   MapNotifier([Map<K, V> map = const {}]) : _map = Map<K, V>.from(map);
 
   @override
   Map<K, V> get value => UnmodifiableMapView<K, V>(_map);
 
+  /// Notifies listeners of the changes.
   @protected
+  @visibleForOverriding
+  @pragma('vm:notify-debugger-on-exception')
   void notifyListeners(MapChangeDetails<K, V> details) {
     super.defaultNotifyListeners(details);
   }

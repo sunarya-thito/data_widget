@@ -24,27 +24,40 @@ class _SetChangeListener<T> extends ChangeListener {
   int get hashCode => listener.hashCode;
 }
 
+/// A set change details containing the added and removed elements.
 class SetChangeDetails<T> {
+  /// The added elements.
   final Iterable<T> added;
+
+  /// The removed elements.
   final Iterable<T> removed;
 
+  /// Creates a set change details.
   const SetChangeDetails(this.added, this.removed);
 }
 
+/// A set that can be listened to for changes.
 abstract class SetListenable<T> extends ValueListenable<Set<T>> {
   @override
   Set<T> get value;
+
+  /// Adds a [listener] to be notified of changes.
   void addChangeListener(SetChangeListener<T> listener);
+
+  /// Removes a [listener] from being notified of changes.
   void removeChangeListener(SetChangeListener<T> listener);
 }
 
+/// A set that can be listened to for changes and notifies listeners when the set changes.
 typedef SetChangeListener<T> = void Function(SetChangeDetails<T> details);
 
+/// A set notifier class that allows mutable updates and notifies listeners of changes.
 class SetNotifier<T> extends SetListenable<T>
     with ChangesNotifierHelperMixin, Iterable<T>
     implements Set<T> {
   final Set<T> _set;
 
+  /// Constructs a [SetNotifier] with an initial set.
   SetNotifier([Set<T> set = const {}]) : _set = Set<T>.from(set);
 
   @override
@@ -99,6 +112,7 @@ class SetNotifier<T> extends SetListenable<T>
     defaultRemoveListener(VoidChangeListener(listener));
   }
 
+  /// Notifies listeners of changes.
   @protected
   @visibleForTesting
   @pragma('vm:notify-debugger-on-exception')

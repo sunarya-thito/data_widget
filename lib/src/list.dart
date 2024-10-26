@@ -5,8 +5,10 @@ import 'package:flutter/foundation.dart';
 
 import '../data_widget.dart';
 
+/// A callback that receives a [ListChangeDetails] object.
 typedef ListChangeListener<T> = void Function(ListChangeDetails<T> details);
 
+/// A list that can be listened to for changes.
 abstract class ListListenable<T> extends ValueListenable<List<T>> {
   @override
   List<T> get value;
@@ -14,11 +16,18 @@ abstract class ListListenable<T> extends ValueListenable<List<T>> {
   void removeChangeListener(ListChangeListener<T> listener);
 }
 
+/// A list change details containing the added, removed, and index of the changes.
 class ListChangeDetails<T> {
+  /// The added elements.
   final Iterable<T> added;
+
+  /// The removed elements.
   final Iterable<T> removed;
+
+  /// The index of the changes.
   final int index;
 
+  /// Creates a list change details.
   const ListChangeDetails(this.added, this.removed, this.index);
 }
 
@@ -42,17 +51,22 @@ class _ListChangeListener<T> extends ChangeListener {
   int get hashCode => listener.hashCode;
 }
 
+/// A list that can be listened to for changes and notifies listeners when the list changes.
 class ListNotifier<T> extends ListListenable<T>
     with ChangesNotifierHelperMixin, Iterable<T>
     implements List<T> {
   final List<T> _list;
 
+  /// Creates a list notifier.
   ListNotifier([List<T> list = const []]) : _list = List<T>.from(list);
 
   @override
   List<T> get value => UnmodifiableListView<T>(_list);
 
+  /// Notifies listeners of the changes.
   @protected
+  @visibleForOverriding
+  @pragma('vm:notify-debugger-on-exception')
   void notifyListeners(ListChangeDetails<T> details) {
     super.defaultNotifyListeners(details);
   }

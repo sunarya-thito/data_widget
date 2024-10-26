@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import '../data_widget.dart';
 
+/// A callback that receives a value and the previous value.
 typedef ValueChangeListener<T> = void Function(T value, T previous);
 
 class _ValueChangeListener<T> extends ChangeListener {
@@ -25,17 +26,21 @@ class _ValueChangeListener<T> extends ChangeListener {
   int get hashCode => listener.hashCode;
 }
 
+/// A value notifier class that notifies listeners of changes.
 class ValueChangeNotifier<T>
     with ChangesNotifierHelperMixin
     implements ValueListenable<T> {
   T _value;
 
+  /// Constructs a [ValueChangeNotifier] with an initial value.
   ValueChangeNotifier(this._value);
 
+  /// Adds a [listener] to be notified of changes.
   void addChangeListener(ValueChangeListener<T> listener) {
     defaultAddListener(_ValueChangeListener(listener));
   }
 
+  /// Removes a [listener] from being notified of changes.
   void removeChangeListener(ValueChangeListener<T> listener) {
     defaultRemoveListener(_ValueChangeListener(listener));
   }

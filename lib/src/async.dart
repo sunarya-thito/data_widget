@@ -192,14 +192,27 @@ typedef FutureWidgetBuilderLoadingCallback = Widget Function(
 typedef FutureWidgetBuilderEmptyCallback = Widget Function(
     BuildContext context);
 
+/// A widget that builds itself based on the latest snapshot of interaction with
 class FutureWidgetBuilder<T> extends StatelessWidget {
+  /// The future to which this builder is currently connected.
   final Future<T>? future;
+
+  /// The builder that will be called when the future is completed with a value.
   final FutureWidgetBuilderCallback<T> builder;
+
+  /// The builder that will be called when the future is completed with an error.
   final FutureWidgetBuilderErrorCallback? errorBuilder;
+
+  /// The builder that will be called when the future is still loading.
   final FutureWidgetBuilderLoadingCallback? loadingBuilder;
+
+  /// The builder that will be called when the future is completed with no data.
   final FutureWidgetBuilderEmptyCallback? emptyBuilder;
+
+  /// The initial data to be used when the future is not completed.
   final T? initialData;
 
+  /// Create a FutureWidgetBuilder.
   const FutureWidgetBuilder({
     super.key,
     this.initialData,
