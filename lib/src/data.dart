@@ -677,8 +677,7 @@ class _InheritedData<T> extends InheritedWidget {
 
   @override
   String toStringShort() {
-    final String type = objectRuntimeType(this, 'Data');
-    return key == null ? type : '$type-$key';
+    return key == null ? 'Data<$T>' : 'Data<$T>-$key';
   }
 
   @override
@@ -1308,6 +1307,11 @@ class _InheritedModel extends InheritedModel<ModelKey> {
       properties
           .add(DiagnosticsProperty(model.dataKey.toString(), model.value));
     }
+  }
+
+  @override
+  String toStringShort() {
+    return key == null ? 'Model' : 'Model-$key';
   }
 
   @override
