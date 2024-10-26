@@ -481,20 +481,24 @@ class Data<T> extends StatelessWidget implements MultiDataItem {
     });
   }
 
+  /// {@template Data.of}
   /// Find and listen to data changes of the data with the given type from the context.
   ///
   /// * [T] The type of the data.
   /// * [context] The build context.
+  /// {@endtemplate}
   static T of<T>(BuildContext context) {
     final data = maybeOf<T>(context);
     assert(data != null, 'No Data<$T> found in context');
     return data!;
   }
 
+  /// {@template Data.maybeFind}
   /// Optionally find the data of the given type from the context.
   ///
   /// * [T] The type of the data.
   /// * [context] The build context.
+  /// {@endtemplate}
   static T? maybeFind<T>(BuildContext context) {
     assert(context.mounted, 'The context must be mounted');
     final widget = context.findAncestorWidgetOfExactType<Data<T>>();
@@ -504,10 +508,12 @@ class Data<T> extends StatelessWidget implements MultiDataItem {
     return widget.data;
   }
 
+  /// {@template Data.maybeFindMessenger}
   /// Find the DataMessenger that holds all of the data with the given type from the context.
   ///
   /// * [T] The type of the data.
   /// * [context] The build context.
+  /// {@endtemplate}
   static T? maybeFindMessenger<T>(BuildContext context) {
     assert(context.mounted, 'The context must be mounted');
     InheritedDataHolderWidget? holder =
@@ -519,28 +525,37 @@ class Data<T> extends StatelessWidget implements MultiDataItem {
     return null;
   }
 
+  /// {@template Data.findMessenger}
   /// Find the stored data somewhere in the ancestor DataMessenger descendants.
+  /// Throws an assertion error if the data is not found.
+  /// - [T] The type of the data.
+  /// - [context] The build context.
+  /// {@endtemplate}
   static T findMessenger<T>(BuildContext context) {
     final data = maybeFindMessenger<T>(context);
     assert(data != null, 'No Data<$T> found in context');
     return data!;
   }
 
+  /// {@template Data.find}
   /// Find the data of the given type from the context. Does not listen
   /// to the data changes.
   ///
   /// * [T] The type of the data.
   /// * [context] The build context.
+  /// {@endtemplate}
   static T find<T>(BuildContext context) {
     final data = maybeFind<T>(context);
     assert(data != null, 'No Data<$T> found in context');
     return data!;
   }
 
+  /// {@template Data.maybeFindRoot}
   /// Optionally find the root data of the given type from the context.
   ///
   /// * [T] The type of the data.
   /// * [context] The build context.
+  /// {@endtemplate}
   static T? maybeFindRoot<T>(BuildContext context) {
     assert(context.mounted, 'The context must be mounted');
     T? found;
@@ -556,21 +571,25 @@ class Data<T> extends StatelessWidget implements MultiDataItem {
     return found;
   }
 
+  /// {@template Data.findRoot}
   /// Find the root data of the given type from the context.
   /// Throws an assertion error if the data is not found.
   ///
   /// * [T] The type of the data.
   /// * [context] The build context.
+  /// {@endtemplate}
   static T findRoot<T>(BuildContext context) {
     final data = maybeFindRoot<T>(context);
     assert(data != null, 'No Data<$T> found in context');
     return data!;
   }
 
+  /// {@template Data.maybeOf}
   /// Optionally find and listen to data changes of the data with the given type from the context.
   ///
   /// * [T] The type of the data.
   /// * [context] The build context.
+  /// {@endtemplate}
   static T? maybeOf<T>(BuildContext context) {
     assert(context.mounted, 'The context must be mounted');
     final widget =
@@ -769,42 +788,53 @@ class Model<T> extends StatelessWidget with ModelProperty<T> {
   @override
   bool get isReadOnly => onChanged == null;
 
+  /// {@template Model.maybeOf}
   /// Optionally find and listen to data changes of the data with the given type from the context.
   ///
   /// * [T] The type of the data.
   /// * [context] The build context.
+  /// * [key] The data key.
+  /// {@endtemplate}
   static T? maybeOf<T>(BuildContext context, Symbol key) {
     return MultiModel.maybeOf(context, key);
   }
 
+  /// {@template Model.of}
   /// Find and listen to data changes of the data with the given type from the context.
   ///
   /// * [T] The type of the data.
   /// * [context] The build context.
   /// * [key] The data key.
+  /// {@endtemplate}
   static T of<T>(BuildContext context, Symbol key) {
     return MultiModel.of(context, key);
   }
 
+  /// {@template Model.maybeFind}
   /// Optionally find the data of the given type from the context.
   /// Returns null if the data is not found.
   ///
   /// * [T] The type of the data.
   /// * [context] The build context.
   /// * [key] The data key.
+  /// {@endtemplate}
   static T? maybeFind<T>(BuildContext context, Symbol key) {
     return MultiModel.maybeFind(context, key);
   }
 
+  /// {@template Model.find}
   /// Find the data of the given type from the context.
   /// Throws an assertion error if the data is not found.
   ///
   /// * [T] The type of the data.
   /// * [context] The build context.
+  /// * [key] The data key.
+  /// {@endtemplate}
   static T find<T>(BuildContext context, Symbol key) {
     return MultiModel.find(context, key);
   }
 
+  /// {@template Model.change}
   /// Change the data of the model with the given key.
   /// Throws an assertion error if the model is read-only.
   ///
@@ -812,31 +842,37 @@ class Model<T> extends StatelessWidget with ModelProperty<T> {
   /// * [context] The build context.
   /// * [key] The data key.
   /// * [data] The new data.
+  /// {@endtemplate}
   static void change<T>(BuildContext context, Symbol key, T data) {
     MultiModel.change(context, key, data);
   }
 
+  /// {@template Model.maybeFindProperty}
   /// Optionally find the property of the given type from the context.
   /// Returns null if the data is not found.
   ///
   /// * [T] The type of the data.
   /// * [context] The build context.
   /// * [key] The data key.
+  /// {@endtemplate}
   static ModelProperty<T>? maybeFindProperty<T>(
       BuildContext context, Symbol key) {
     return MultiModel.maybeFindProperty(context, key);
   }
 
+  /// {@template Model.findProperty}
   /// Find the property of the given type from the context.
   /// Throws an assertion error if the data is not found.
   ///
   /// * [T] The type of the data.
   /// * [context] The build context.
   /// * [key] The data key.
+  /// {@endtemplate}
   static ModelProperty<T> findProperty<T>(BuildContext context, Symbol key) {
     return MultiModel.findProperty(context, key);
   }
 
+  /// {@template Model.maybeChange}
   /// Optionally change the data of the model with the given key.
   /// Ignores if the model is read-only.
   ///
@@ -844,25 +880,31 @@ class Model<T> extends StatelessWidget with ModelProperty<T> {
   /// * [context] The build context.
   /// * [key] The data key.
   /// * [data] The new data.
+  /// {@endtemplate}
   static bool maybeChange<T>(BuildContext context, Symbol key, T data) {
     return MultiModel.maybeChange(context, key, data);
   }
 
+  /// {@template Model.ofProperty}
   /// Find and listen to property changes of the data with the given type from the context.
   /// Throws an assertion error if the data is not found.
   ///
   /// * [T] The type of the data.
   /// * [context] The build context.
+  /// * [key] The data key.
+  /// {@endtemplate}
   static ModelProperty<T> ofProperty<T>(BuildContext context, Symbol key) {
     return MultiModel.ofProperty(context, key);
   }
 
+  /// {@template Model.maybeOfProperty}
   /// Optionally find and listen to property changes of the data with the given type from the context.
   /// Returns null if the data is not found.
   ///
   /// * [T] The type of the data.
   /// * [context] The build context.
   /// * [key] The data key.
+  /// {@endtemplate}
   static ModelProperty<T>? maybeOfProperty<T>(
       BuildContext context, Symbol key) {
     return MultiModel.maybeOfProperty(context, key);

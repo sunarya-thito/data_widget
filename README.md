@@ -285,6 +285,39 @@ mapNotifier.addChangeListener((details) {
 mapNotifier[4] = 'Four';
 ```
 
+### DebounceController
+A controller that can be used to debounce the function call.
+```dart
+DebounceController debounceController = DebounceController();
+
+debounceController.debounce(() {
+  print('Debounced!'); // This will be cancelled
+}, duration: const Duration(seconds: 1));
+debounceController.debounce(() {
+  print('Debounced 2!'); // This will be executed
+}, duration: const Duration(seconds: 1));
+// The first function call will be canceled and only the second function call will be executed
+// Unless we wait for the debounce to finish, then the next function call will be executed
+await Future.delayed(const Duration(seconds: 1));
+debounceController.debounce(() {
+  print('Debounced 3!'); // This will be executed
+}, duration: const Duration(seconds: 1));
+```
+#### Use case
+Preventing multiple function calls when the user is typing in the search bar.
+
+```dart
+TextField(
+  onChanged: (value) {
+    debounceController.debounce(() {
+      // This will be executed after the user stops typing for 500ms,
+      // if the user keeps typing, the debounce will be reset
+      // so user cannot spam the search request if they type too fast
+    }, duration: const Duration(milliseconds: 500));
+  },
+)
+```
+
 ## Getting started
 ### 1. Install the package
 In your terminal:

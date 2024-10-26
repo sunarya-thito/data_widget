@@ -25,11 +25,25 @@ extension ValueNotifierExtension<T> on ValueNotifier<T> {
   ValueListenable<T> readOnly() {
     return ValueNotifierUnmodifiableView(this);
   }
+
+  ValueListenable<R> map<R>(R Function(T value) mapper) {
+    return MappedValueNotifier(this, mapper);
+  }
+}
+
+extension ValueListenableExtension<T> on ValueListenable<T> {
+  ValueListenable<R> map<R>(R Function(T value) mapper) {
+    return MappedValueNotifier(this, mapper);
+  }
 }
 
 extension ValueChangeNotifierExtension<T> on ValueChangeNotifier<T> {
   ValueListenable<T> readOnly() {
     return ValueNotifierUnmodifiableView(this);
+  }
+
+  ValueListenable<R> map<R>(R Function(T value) mapper) {
+    return MappedValueNotifier(this, mapper);
   }
 }
 
@@ -42,6 +56,26 @@ class ValueNotifierUnmodifiableView<T> extends ValueListenable<T> {
 
   @override
   T get value => _notifier.value;
+
+  @override
+  void addListener(VoidCallback listener) {
+    _notifier.addListener(listener);
+  }
+
+  @override
+  void removeListener(VoidCallback listener) {
+    _notifier.removeListener(listener);
+  }
+}
+
+class MappedValueNotifier<T, R> extends ValueListenable<R> {
+  final ValueListenable<T> _notifier;
+  final R Function(T value) _mapper;
+
+  MappedValueNotifier(this._notifier, this._mapper);
+
+  @override
+  R get value => _mapper(_notifier.value);
 
   @override
   void addListener(VoidCallback listener) {
