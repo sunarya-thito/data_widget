@@ -1,6 +1,6 @@
 name: data_widget
-description: "A data related helper widget and tools"
-version: 0.0.1
+description: "A data related helper widget and tools to help you build your flutter app faster with less code."
+version: 0.0.2
 homepage: "https://github.com/sunarya-thito/data_widget"
 repository: "https://github.com/sunarya-thito/data_widget"
 
