@@ -1177,7 +1177,7 @@ class MultiModel extends StatelessWidget {
   final Widget child;
 
   /// Creates a MultiModel.
-  const MultiModel({required this.data, required this.child});
+  const MultiModel({super.key, required this.data, required this.child});
 
   @override
   Widget build(BuildContext context) {
