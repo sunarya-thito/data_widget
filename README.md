@@ -83,13 +83,11 @@ MultiData(
 
 Getting the data is similar to `Data` widget.
 
-| Note                                                                                                  |
-|:----------------------------------------------------------------------------------------------------------|
-| Providing type in the type param is optional but encouraged to avoid runtime errors due to type mismatch. |
+> [!NOTE]
+> Providing type in the type param is optional but encouraged to avoid runtime errors due to type mismatch.
 
-| Warning                                                                                                |
-|:--------------------------------------------------------------------------------------------------------|
-| The order of the data must be the same as the order of the data provided.                               |
+> [!WARNING]
+> The order of the data must be the same as the order of the data provided.
 
 ### Model
 A widget that holds a single model and allows its descendants to access or change the value of the model.
@@ -185,13 +183,11 @@ MultiModel(
 
 Getting the model is similar to `Model` widget.
 
-| Note                                                                                                  |
-|:----------------------------------------------------------------------------------------------------------|
-| Providing type in the type param is optional but encouraged to avoid runtime errors due to type mismatch. |
+> [!NOTE]
+> Providing type in the type param is optional but encouraged to avoid runtime errors due to type mismatch.
 
-| Warning                                                                                                |
-|:--------------------------------------------------------------------------------------------------------|
-| The order of the data must be the same as the order of the data provided.                               |
+> [!WARNING]
+> The order of the data must be the same as the order of the data provided.
 
 ### MutableNotifier
 When using `List` (or any mutable object) as the value for `ValueNotifier`, it will not notify the listeners when the list is mutated,
